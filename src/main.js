@@ -1,7 +1,9 @@
-import App from "./App.svelte";
+// main.js
+import App from './App.svelte';
 
 const app = new App({
-  target: document.getElementById("app")
+    target: document.body,
+    hydratable: true
 });
 
 export default app;

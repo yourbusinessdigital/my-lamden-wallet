@@ -1,27 +1,45 @@
-<!-- App.svelte -->
 <script>
-  import { Router, Route } from "svelte-routing";
+	import { Router, Route, Link } from "svelte-routing";
+	import Home from "./pages/home.svelte";
+	import Login from "./pages/login.svelte";
+	import LoginNew from "./pages/login-new.svelte";
+	import LoginExisting from "./pages/login-existing.svelte";
+	export let url = ""; //This property is necessary declare to avoid ignore the Router
 
-  // Admin Layout
-  import Admin from "./layouts/Admin.svelte";
-  // Auth Layout
-  import Auth from "./layouts/Auth.svelte";
-
-  // No Layout Pages
-  import Index from "./views/Index.svelte";
-  import Landing from "./views/Landing.svelte";
-  import Profile from "./views/Profile.svelte";
-
-  export let url = "";
 </script>
-
 <Router url="{url}">
-  <!-- admin layout -->
-  <Route path="admin/*admin" component="{Admin}" />
-  <!-- auth layout -->
-  <Route path="auth/*auth" component="{Auth}" />
-  <!-- no layout pages -->
-  <Route path="landing" component="{Landing}" />
-  <Route path="profile" component="{Profile}" />
-  <Route path="/" component="{Index}" />
-</Router>
+	<nav>
+	   <Link to="/">Home</Link>
+	 </nav>
+	 <div>
+	   <!--for now the router just support case sensitive,
+		   one workaround colud be add two time the route
+		   Example.
+		  <Route path="About" component="{About}" /> 
+	   -->
+	   <Route path="/"><Home /></Route>
+	 </div>
+   </Router><main>
+</main>
+
+<style>
+	main {
+		text-align: center;
+		padding: 1em;
+		max-width: 240px;
+		margin: 0 auto;
+	}
+
+	h1 {
+		color: #ff3e00;
+		text-transform: uppercase;
+		font-size: 4em;
+		font-weight: 100;
+	}
+
+	@media (min-width: 640px) {
+		main {
+			max-width: none;
+		}
+	}
+</style>
