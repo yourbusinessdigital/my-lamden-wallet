@@ -10,6 +10,7 @@ let PageLogin = false;
     tau: 0,
     address: "None",
     privatekey: "Unknown",
+    passphrase: "",
                 }
     function login(vk, sk)
     {
@@ -33,11 +34,31 @@ let PageLogin = false;
    PageLogin = false;
    PageLoginNew = true;
  }
+function btnCreateWalletNext()
+{
+  PageLoginNew = false;
+
+
+}
+
+ function passcheck() {
+  var password1 = document.getElementById('password1');
+  var password2 = document.getElementById('password2');
+  if (password1.value != password2.value) {
+    document.getElementById("completebtn").disabled = true;
+    console.log("Bad");
+  } 
+  else {
+    document.getElementById("completebtn").disabled = false;
+    console.log("Good");
+  }
+}
 
 </script>
 <svelte:head>
   <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet" />
   <style>main { padding:0 !important;  }
+  #completebtn:disabled { background-color:#777 !important; }
   </style>  
 </svelte:head>
 <main>
@@ -346,17 +367,17 @@ let PageLogin = false;
                         </h3>
             <div class="mt-2">
               <p class="text-sm text-gray-500">
-                Enter a secure password to protect your wallet, please make sure you remember this password as losing it will render the wallet unrecoverable.
-              </p>
+                Enter a secure password to protect your wallet, please make sure you remember or physically write down this password as losing it will render the wallet unrecoverable.
+              </p>       <p class="text-sm text-gray-500">
+The Next button will unlock once the passwords match. We recommend using at least 10 characters, or writing out a memorable unique sentence.              </p>
             </div>
           </div>
         </div>
-        <div class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
-          <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm">
-            Unlock Existing Wallet
-          </button>
-          <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm">
-            Create New Wallet
+        <div class="">
+          <input type="password" id="password1" class="border py-2 px-3 text-grey-darkest w-full"  on:input={passcheck} bind:value={wallet.passphrase} />
+          <input type="password" id="password2"  class="border py-2 px-3 text-grey-darkest w-full" on:input={passcheck}  />
+          <button type="button" disabled id="completebtn" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm" on:click={btnCreateWalletNext}>
+            Next
           </button>
         </div>
       </div>
