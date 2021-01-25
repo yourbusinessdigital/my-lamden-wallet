@@ -21,11 +21,12 @@
 
   import Login from './Login.svelte';
 
-/********************************
- *   PAGE ROUTING *
- * ***************************
+/******************************
+ *   PAGE ROUTING             *
+ ******************************
  * 
  * Yeah, this is the page routing. It's large, It's clunky, It's tedious, but it works. */
+ let lamdenWallet = Lamden.wallet.new_wallet()
 
   let PageLogin = false;
   let PageLoginNew = false;
