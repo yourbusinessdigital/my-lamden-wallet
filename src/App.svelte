@@ -1,10 +1,7 @@
 <script>
 
-
-let PageLogin = false;
-  let PageLoginExisting = false;
-  let PageLoginNew = false;
-  let PageLoginKeystore = false;
+/* SCRIPT INIT */ 
+ let files;
   let wallet = { 
     loggedIn : false,
     tau: 0,
@@ -23,7 +20,21 @@ let PageLogin = false;
     }
 
   import Login from './Login.svelte';
- PageLogin = true;
+
+/********************************
+ *   PAGE ROUTING *
+ * ***************************
+ * 
+ * Yeah, this is the page routing. It's large, It's clunky, It's tedious, but it works. */
+
+  let PageLogin = false;
+  let PageLoginNew = false;
+  let PageLoginExisting = false;
+  let PageLoginExistingKeystoreFile = false;
+  let PageLoginExisting24Words = false;
+  let PageLoginExistingPrivateKey = false;
+  PageLogin = true; 
+
  function btnExistingWallet() 
  {
   PageLogin = false;
@@ -37,10 +48,33 @@ let PageLogin = false;
 function btnCreateWalletNext()
 {
   PageLoginNew = false;
+}
+function btnLoginExistingKeystoreFile()
+{
+  PageLoginExisting = false;
+  PageLoginExistingKeystoreFile = true;
+}
+function btnLoginExisting24Words ()
+{
+  PageLoginExisting = false;
+  PageLoginExisting24Words = true;
 
 
 }
+function btnLoginExistingPrivateKey () 
+{
+  PageLoginExisting = false;
+  PageLoginExistingPrivateKey = true;
+}
 
+
+
+/************************
+ * Passcheck *
+ * *********************
+ * Validates the passwords match, simples.
+ * TODO: Validate password length. doing an IF for password1.length > 8 doesn't work. Don't know why. I'm not going to ask why.
+*/
  function passcheck() {
   var password1 = document.getElementById('password1');
   var password2 = document.getElementById('password2');
@@ -53,6 +87,19 @@ function btnCreateWalletNext()
     console.log("Good");
   }
 }
+/********************
+ * unlockfile
+ * *****************
+ * Unlocks the keystore file. Unlock File
+*/
+
+function unlockfile() {
+
+
+}
+
+
+
 
 </script>
 <svelte:head>
@@ -273,7 +320,7 @@ function btnCreateWalletNext()
     <main class="flex-1 relative z-0 overflow-y-auto focus:outline-none" tabindex="0">
       <div class="py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-          <h1 class="text-2xl font-semibold text-gray-900">Dashboard</h1>
+          <h3 class="text-2xl font-semibold text-gray-900">Dashboard</h3>
         </div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
           <!-- Replace with your content -->
@@ -422,13 +469,152 @@ The Next button will unlock once the passwords match. We recommend using at leas
             </div>
           </div>
         </div>
-        <div class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
-          <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm">
-            Unlock Existing Wallet
+        <div class="mt-5 sm:mt-6 sm:gap-3 sm:grid-flow-row-dense">
+          <button type="button" class="w-full mt-1inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm" on:click={btnLoginExistingKeystoreFile}>
+            Keystore File
+        </button>
+        <button type="button" class="w-full mt-1 mb-1 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm" on:click={btnLoginExisting24Words}>
+          24 Words
+      </button>
+          <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm" on:click={btnLoginExistingPrivateKey}>
+            Private Key 
           </button>
-          <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm">
-            Create New Wallet
-          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {/if}
+  
+  {#if PageLoginExistingKeystoreFile}
+
+
+  <!--- Existing Keysotre -->
+  <div class="fixed z-10 inset-0 overflow-y-auto" id="login-existing">
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <!--
+        Background overlay, show/hide based on modal state.
+  
+        Entering: "ease-out duration-300"
+          From: "opacity-0"
+          To: "opacity-100"
+        Leaving: "ease-in duration-200"
+          From: "opacity-100"
+          To: "opacity-0"
+      -->
+      <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+        <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+      </div>
+  
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+    
+      <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6" role="dialog" aria-modal="true" aria-labelledby="modal-headline" id="login1">
+        <div>
+          <div class="mt-3 text-center sm:mt-5">
+            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
+                Select your keystore file.
+                        </h3>
+            <div class="mt-2">
+              <p class="text-sm text-gray-500">
+                <input type="file" bind:files>
+                <input type="password" id="password1" class="border py-2 px-3 text-grey-darkest w-full"  on:input={unlockfile} bind:value={wallet.passphrase} />
+                <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm">
+                  Next 
+                </button>
+      
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {/if}
+  {#if PageLoginExisting24Words}
+
+
+  <!--- Existing Keysotre -->
+  <div class="fixed z-10 inset-0 overflow-y-auto" id="login-existing">
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <!--
+        Background overlay, show/hide based on modal state.
+  
+        Entering: "ease-out duration-300"
+          From: "opacity-0"
+          To: "opacity-100"
+        Leaving: "ease-in duration-200"
+          From: "opacity-100"
+          To: "opacity-0"
+      -->
+      <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+        <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+      </div>
+  
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+    
+      <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6" role="dialog" aria-modal="true" aria-labelledby="modal-headline" id="login1">
+        <div>
+          <div class="mt-3 text-center sm:mt-5">
+            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
+              Enter your 24 Word Combination to Unlock your wallet.      
+            </h3>
+            <div class="mt-2">
+              <p class="text-sm text-gray-500">
+                <input type="text" id="24words" class="border py-2 px-3 text-grey-darkest w-full" bind:value={wallet.twentyfourwords} />
+                <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm">
+                  Next 
+                </button>
+      
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {/if}
+  {#if PageLoginExistingPrivateKey}
+
+
+  <!--- Existing Keysotre -->
+  <div class="fixed z-10 inset-0 overflow-y-auto" id="login-existing">
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <!--
+        Background overlay, show/hide based on modal state.
+  
+        Entering: "ease-out duration-300"
+          From: "opacity-0"
+          To: "opacity-100"
+        Leaving: "ease-in duration-200"
+          From: "opacity-100"
+          To: "opacity-0"
+      -->
+      <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+        <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+      </div>
+  
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+    
+      <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6" role="dialog" aria-modal="true" aria-labelledby="modal-headline" id="login1">
+        <div>
+          <div class="mt-3 text-center sm:mt-5">
+            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
+                Enter your private key.
+            </h3>
+            <p>Reminder: We do not recommend you store an unencrypted private key on your computer, or anywhere physically not secured, as it makes it extremely trivial for anyone who has access to the key to steal your funds.</p>
+            <div class="mt-2">
+              <p class="text-sm text-gray-500">
+                <input type="file" bind:files>
+                <input type="password" id="password1" class="border py-2 px-3 text-grey-darkest w-full"  on:input={unlockfile} bind:value={wallet.passphrase} />
+                <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm">
+                  Next 
+                </button>
+      
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
