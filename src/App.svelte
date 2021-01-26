@@ -14,6 +14,8 @@
 
    import Login from './Login.svelte';
    import Buffer from 'Buffer';
+
+ 
   let networkInfo = {
     name: 'Lamden Public Testnet',
     type: 'testnet',
@@ -33,10 +35,16 @@
 */
   function login(vk, sk)
     {
+      let Net = new Network({
+        name: 'Lamden Public Testnet',
+        type: 'testnet',
+        hosts: ['https://testnet-master-1.lamden.io:443']
+        })
       wallet.loggedIn = true;
       wallet.tau = 0;
       wallet.address = vk; 
       wallet.privatekey = sk;
+      wallet.tau = Net.getCurrencyBalance(vk)
     }
 
   function sendTAU(amount, reciever) {
@@ -504,9 +512,9 @@ function sha512(str) {
               <button type="button" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"   on:click={btnSendTau}>
                 Send TAU
               </button>
-              <button disabled type="button" class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+             <!--- <button disabled type="button" class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Buy TAU
-              </button>
+              </button>-->
             </div>
           </div>
           
@@ -895,9 +903,10 @@ The Next button will unlock once the words have been entered correctly. If it do
           <p>You can make a TAU transaction here.</p>
           <div class="mt-2">
             <p class="text-sm text-gray-500">
+              To: 
               <input type="text" id="tauto"   class="border py-2 px-3 text-grey-darkest w-full" />
-              <input type="password" id="tauamount"   class="border py-2 px-3 text-grey-darkest w-full" />
-              <input type="password" id="taublah"    class="border py-2 px-3 text-grey-darkest w-full" />
+              Amount: 
+              <input type="number" id="tauamount"   class="border py-2 px-3 text-grey-darkest w-full" />
               <button type="button" id="privkeycheckbtn" disabled class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm" on:click={btnSendTau}>
                 Next 
               </button>  <button type="button" id="privkeycheckbtn" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm" on:click={btnSendTauClose}>
