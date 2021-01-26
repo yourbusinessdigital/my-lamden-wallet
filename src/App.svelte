@@ -11,7 +11,6 @@
     words24: "",
                 }
     import Lamden from 'lamden-js'
-
    import Login from './Login.svelte';
    import Buffer from 'Buffer';
 
@@ -33,18 +32,19 @@
 /****************
  * Wallet functions
 */
-  function login(vk, sk)
+  async function login(vk, sk)
     {
-      let Net = new Network({
+      let Net = new Lamden.Network({
         name: 'Lamden Public Testnet',
         type: 'testnet',
         hosts: ['https://testnet-master-1.lamden.io:443']
         })
-      wallet.loggedIn = true;
-      wallet.tau = 0;
+      wallet.tau = await Net.API.getCurrencyBalance(vk);
       wallet.address = vk; 
       wallet.privatekey = sk;
-      wallet.tau = Net.getCurrencyBalance(vk)
+      wallet.loggedIn = true;
+      Net.ping();
+        
     }
 
   function sendTAU(amount, reciever) {
@@ -59,16 +59,16 @@
       contractName: "currency",
       methodName: "transfer",
       kwargs,
-      stamplimit: 50
+      stampLimit: 50
     }
     let tx = new Lamden.TransactionBuilder(networkInfo, txInfo)
     let senderSk = wallet.privatekey;
-    tx.send(senderSk, (res, err) => {
-    if (err) throw new Error(err)
-    console.log(res.hash)
-    tx.checkForTransactionResult()
-    .then(res => console.log(res))
+    tx.events.on('response', (response) => {
+    if (tx.resultInfo.type === 'error') return
+    console.log(response)
     })
+    tx.send(senderSk).then(() => tx.checkForTransactionResult())
+
     PageSendTau = false;
     PageSendTauResult = true;
 
@@ -156,6 +156,15 @@ function btnConfirmWords ()
 function btnSendTau () 
 {
   PageSendTau = true;
+  
+}
+function btnSendTauSend ()
+{
+
+  sendTAU(document.getElementById("tauamount").value, document.getElementById("tauto").value)
+  PageSendTau = false;
+  PageSendTauResult = true;
+
 }
 function btnSendTauClose ()
 {
@@ -907,7 +916,7 @@ The Next button will unlock once the words have been entered correctly. If it do
               <input type="text" id="tauto"   class="border py-2 px-3 text-grey-darkest w-full" />
               Amount: 
               <input type="number" id="tauamount"   class="border py-2 px-3 text-grey-darkest w-full" />
-              <button type="button" id="privkeycheckbtn" disabled class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm" on:click={btnSendTau}>
+              <button type="button" id="privkeycheckbtn" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm" on:click={btnSendTauSend}>
                 Next 
               </button>  <button type="button" id="privkeycheckbtn" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm" on:click={btnSendTauClose}>
                 Cancel 
