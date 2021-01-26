@@ -10,15 +10,6 @@
     passphrase: "",
     words24: "",
                 }
-    function login(vk, sk)
-    {
-      wallet.loggedIn = true;
-      wallet.tau = 0;
-      wallet.address = vk; 
-      wallet.privatekey = sk;
-
-
-    }
     import Lamden from 'lamden-js'
 
    import Login from './Login.svelte';
@@ -36,6 +27,45 @@
   let computerwords = "";
   let hash = "";
   let privatekeyform = "";
+
+/****************
+ * Wallet functions
+*/
+  function login(vk, sk)
+    {
+      wallet.loggedIn = true;
+      wallet.tau = 0;
+      wallet.address = vk; 
+      wallet.privatekey = sk;
+    }
+
+  function sendTAU(amount, reciever) {
+    let senderVk = wallet.address;
+    let recieverVk = reciever;
+    let kwargs = {
+      to: recieverVk,
+      amount: amount
+    }
+    let txInfo = {
+      senderVk,
+      contractName: "currency",
+      methodName: "transfer",
+      kwargs,
+      stamplimit: 50
+    }
+    let tx = new Lamden.TransactionBuilder(networkInfo, txInfo)
+    let senderSk = wallet.privatekey;
+    tx.send(senderSk, (res, err) => {
+    if (err) throw new Error(err)
+    console.log(res.hash)
+    tx.checkForTransactionResult()
+    .then(res => console.log(res))
+    })
+    PageSendTau = false;
+    PageSendTauResult = true;
+
+  }
+
 /******************************
  *   PAGE ROUTING             *
  ******************************
@@ -49,6 +79,8 @@
   let PageLoginExistingKeystoreFile = false;
   let PageLoginExisting24Words = false;
   let PageLoginExistingPrivateKey = false;
+  let PageSendTau = false;
+  let PageSendTauResult = false;
   PageLogin = true; 
  
  function btnExistingWallet() 
@@ -110,6 +142,22 @@ function btnConfirmWords ()
   PageLoginNew = false;
   PageLoginNew2 = true;
 }
+
+
+
+function btnSendTau () 
+{
+  PageSendTau = true;
+}
+function btnSendTauClose ()
+{
+  PageSendTau = false;
+}
+function btnCloseTau () 
+{
+  PageSendTauResult = false;
+}
+
 
 
 
@@ -273,7 +321,6 @@ function sha512(str) {
           <nav class="mt-5 px-2 space-y-1">
             <!-- Current: "bg-indigo-800 text-white", Default: "text-white hover:bg-indigo-600 hover:bg-opacity-75" -->
             <span class="bg-indigo-800 text-white group flex items-center px-2 py-2 text-base font-medium rounded-md">
-              <!-- Heroicon name: home -->
               <svg class="mr-4 h-6 w-6 text-indigo-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
               </svg>
@@ -281,7 +328,6 @@ function sha512(str) {
             </span>
 
             <span class="text-white hover:bg-indigo-600 hover:bg-opacity-75 group flex items-center px-2 py-2 text-base font-medium rounded-md">
-              <!-- Heroicon name: users -->
               <svg class="mr-4 h-6 w-6 text-indigo-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
               </svg>
@@ -289,15 +335,14 @@ function sha512(str) {
             </span>
 
             <span class="text-white hover:bg-indigo-600 hover:bg-opacity-75 group flex items-center px-2 py-2 text-base font-medium rounded-md">
-              <!-- Heroicon name: folder -->
               <svg class="mr-4 h-6 w-6 text-indigo-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
               </svg>
-              Tokens
+              Settings
             </span>
-
+<!--
+  
             <span class="text-white hover:bg-indigo-600 hover:bg-opacity-75 group flex items-center px-2 py-2 text-base font-medium rounded-md">
-              <!-- Heroicon name: calendar -->
               <svg class="mr-4 h-6 w-6 text-indigo-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
@@ -305,7 +350,6 @@ function sha512(str) {
             </span>
 
             <span class="text-white hover:bg-indigo-600 hover:bg-opacity-75 group flex items-center px-2 py-2 text-base font-medium rounded-md">
-              <!-- Heroicon name: inbox -->
               <svg class="mr-4 h-6 w-6 text-indigo-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
               </svg>
@@ -313,12 +357,11 @@ function sha512(str) {
             </span>
 
             <span class="text-white hover:bg-indigo-600 hover:bg-opacity-75 group flex items-center px-2 py-2 text-base font-medium rounded-md">
-              <!-- Heroicon name: chart-bar -->
               <svg class="mr-4 h-6 w-6 text-indigo-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
               Contracts
-            </span>
+            </span> -->
           </nav>
         </div>
         <div class="flex-shrink-0 flex border-t border-indigo-800 p-4">
@@ -364,8 +407,7 @@ function sha512(str) {
               Dashboard
             </span>
 
-            <span class="text-white hover:bg-indigo-600 hover:bg-opacity-75 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-              <!-- Heroicon name: users -->
+            <span class="text-white hover:bg-indigo-600 hover:bg-opacity-75 group flex items-center px-2 py-2 text-sm font-medium rounded-md"  on:click={btnSendTau}>
               <svg class="mr-3 h-6 w-6 text-indigo-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
               </svg>
@@ -373,15 +415,13 @@ function sha512(str) {
             </span>
 
             <span class="text-white hover:bg-indigo-600 hover:bg-opacity-75 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-              <!-- Heroicon name: folder -->
               <svg class="mr-3 h-6 w-6 text-indigo-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
               </svg>
-              Tokens
+              Settings
             </span>
-
+<!-- 
             <span class="text-white hover:bg-indigo-600 hover:bg-opacity-75 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-              <!-- Heroicon name: calendar -->
               <svg class="mr-3 h-6 w-6 text-indigo-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
@@ -389,7 +429,6 @@ function sha512(str) {
             </span>
 
             <span class="text-white hover:bg-indigo-600 hover:bg-opacity-75 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-              <!-- Heroicon name: inbox -->
               <svg class="mr-3 h-6 w-6 text-indigo-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
               </svg>
@@ -397,12 +436,12 @@ function sha512(str) {
             </span>
 
             <span class="text-white hover:bg-indigo-600 hover:bg-opacity-75 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-              <!-- Heroicon name: chart-bar -->
               <svg class="mr-3 h-6 w-6 text-indigo-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
               Contracts
-            </span>
+            </span> -->
+          
           </nav>
         </div>
         <div class="flex-shrink-0 flex border-t border-indigo-800 p-4">
@@ -435,11 +474,8 @@ function sha512(str) {
         </svg>
       </button>
     </div>
-    <main class="flex-1 relative z-0 overflow-y-auto focus:outline-none" tabindex="0">
+    <main class="w-full	 flex-1 relative z-0 overflow-y-auto focus:outline-none" tabindex="0">
       <div class="py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-          <h3 class="text-2xl font-semibold text-gray-900">Dashboard</h3>
-        </div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
           <div class="rounded-md bg-blue-50 p-4">
             <div class="flex">
@@ -451,7 +487,7 @@ function sha512(str) {
               </div>
               <div class="ml-3 flex-1 md:flex md:justify-between">
                 <p class="text-sm text-blue-700">
-                  You are running a BETA build of My Lamden Wallet.
+                  You are running a BETA build of My Lamden Wallet on TESTNET!
                 </p>
                 <p class="mt-3 text-sm md:mt-0 md:ml-6">
                   <a href="https://uselamden.com/my-lamden-wallet" class="whitespace-nowrap font-medium text-blue-700 hover:text-blue-600">Details <span aria-hidden="true">&rarr;</span></a>
@@ -460,7 +496,20 @@ function sha512(str) {
             </div>
           </div>
         
-        
+          <div class="pb-5 border-b border-gray-200 sm:flex sm:items-center sm:justify-between">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">
+                {wallet.tau} TAU
+            </h3>
+            <div class="mt-3 flex sm:mt-0 sm:ml-4">
+              <button type="button" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"   on:click={btnSendTau}>
+                Send TAU
+              </button>
+              <button disabled type="button" class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Buy TAU
+              </button>
+            </div>
+          </div>
+          
         
         
         
@@ -803,27 +852,113 @@ The Next button will unlock once the words have been entered correctly. If it do
 
   {/if}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  {#if PageSendTau}
+ <!--- Existing Keysotre -->
+ <div class="fixed z-10 inset-0 overflow-y-auto" id="login-existing">
+  <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <!--
+      Background overlay, show/hide based on modal state.
+
+      Entering: "ease-out duration-300"
+        From: "opacity-0"
+        To: "opacity-100"
+      Leaving: "ease-in duration-200"
+        From: "opacity-100"
+        To: "opacity-0"
+    -->
+    <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+      <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+    </div>
+
+    <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+  
+    <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6" role="dialog" aria-modal="true" aria-labelledby="modal-headline" id="login1">
+      <div>
+        <div class="mt-3 text-center sm:mt-5">
+          <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
+              Send TAU Transaction
+          </h3>
+          <p>You can make a TAU transaction here.</p>
+          <div class="mt-2">
+            <p class="text-sm text-gray-500">
+              <input type="text" id="tauto"   class="border py-2 px-3 text-grey-darkest w-full" />
+              <input type="password" id="tauamount"   class="border py-2 px-3 text-grey-darkest w-full" />
+              <input type="password" id="taublah"    class="border py-2 px-3 text-grey-darkest w-full" />
+              <button type="button" id="privkeycheckbtn" disabled class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm" on:click={btnSendTau}>
+                Next 
+              </button>  <button type="button" id="privkeycheckbtn" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm" on:click={btnSendTauClose}>
+                Cancel 
+              </button>
+    
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  {/if}
+  {#if PageSendTauResult}
+ <!--- Existing Keysotre -->
+ <div class="fixed z-10 inset-0 overflow-y-auto" id="login-existing">
+  <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <!--
+      Background overlay, show/hide based on modal state.
+
+      Entering: "ease-out duration-300"
+        From: "opacity-0"
+        To: "opacity-100"
+      Leaving: "ease-in duration-200"
+        From: "opacity-100"
+        To: "opacity-0"
+    -->
+    <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+      <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+    </div>
+
+    <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+  
+    <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6" role="dialog" aria-modal="true" aria-labelledby="modal-headline" id="login1">
+      <div>
+        <div class="mt-3 text-center sm:mt-5">
+          <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
+              Enter your private key.
+          </h3>
+          <p>Reminder: We do not recommend you store an unencrypted private key on your computer, or anywhere physically not secured, as it makes it extremely trivial for anyone who has access to the key to steal your funds.</p>
+          <div class="mt-2">
+            <p class="text-sm text-gray-500">
+              <input type="password" id="privatekeyform"   on:input={privkeycheck} class="border py-2 px-3 text-grey-darkest w-full" />
+              <button type="button" id="privkeycheckbtn" disabled class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm" on:click={btnLoginExistingPrivateKey2}>
+                Next 
+              </button>
+    
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  {/if}
 </main>
 
 
 <style>
-	main {
-		text-align: center;
-		padding: 1em;
-		max-width: 240px;
-		margin: 0 auto;
-	}
 
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
-	}
-
-	@media (min-width: 640px) {
-		main {
-			max-width: none;
-		}
-	}
-</style>
+</style> 
