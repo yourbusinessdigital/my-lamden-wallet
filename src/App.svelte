@@ -251,7 +251,7 @@ async function sha256(message) {
     return hashArray;
 } 
 
-/*** does stuf **/
+/*** Functions to generate good numbers.. mostly unused   **/
 const randomFloat = function () {
   const int = window.crypto.getRandomValues(new Uint32Array(1))[0]
   return int / 2**32
@@ -954,14 +954,11 @@ The Next button will unlock once the words have been entered correctly. If it do
     <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6" role="dialog" aria-modal="true" aria-labelledby="modal-headline" id="login1">
       <div>
         <div class="mt-3 text-center sm:mt-5">
-          <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
-              Enter your private key.
-          </h3>
-          <p>Reminder: We do not recommend you store an unencrypted private key on your computer, or anywhere physically not secured, as it makes it extremely trivial for anyone who has access to the key to steal your funds.</p>
+          <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-headline">Transaction Results          </h3>
+          <p>Todo: Get TX result and put it here..</p>
           <div class="mt-2">
             <p class="text-sm text-gray-500">
-              <input type="password" id="privatekeyform"   on:input={privkeycheck} class="border py-2 px-3 text-grey-darkest w-full" />
-              <button type="button" id="privkeycheckbtn" disabled class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm" on:click={btnLoginExistingPrivateKey2}>
+              <button type="button" id="privkeycheckbtn"  class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm" on:click={btnCloseTau}>
                 Next 
               </button>
     
