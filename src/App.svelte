@@ -624,6 +624,8 @@ function sha512(str) {
           </div>
         </div>
         <div class="">
+         
+
           <button type="button"  id="completebtn" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm" on:click={btnConfirmWords}>
             Next
           </button>
@@ -670,6 +672,9 @@ The Next button will unlock once the words have been entered correctly. If it do
           <input type="text" id="words24" class="border py-2 px-3 text-grey-darkest w-full"  on:input={wordscheck} />
           <button disabled type="button" id="completebtnwords" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm" on:click={btnCreateWalletNext}>
             Next
+          </button>
+          <button type="button"  id="completebtn" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm" on:click={btnCreateWalletNext}>
+            Skip for testing purposes. (remove me later)
           </button>
         </div>
       </div>
