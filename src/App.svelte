@@ -1,6 +1,7 @@
 <script>
 
 /* SCRIPT INIT */ 
+let istestnet = true;
  let files;
   let wallet = { 
     loggedIn : false,
@@ -11,8 +12,8 @@
     words24: "",
                 }
     import Lamden from 'lamden-js'
-   import Login from './Login.svelte';
-   import Buffer from 'Buffer';
+    import Login from './Login.svelte';
+    import Buffer from 'Buffer';
 
  
   let networkInfo = {
@@ -22,7 +23,6 @@
   }
   let sk = "";
   let vk = "";
-  let balance = 0;
   let keys = "";
   let humanwords = "";
   let computerwords = "";
@@ -48,10 +48,11 @@
     }
 
   function sendTAU(amount, receiver) {
+
+    
     let senderVk = wallet.address;
-    let receiverVk = receiver;
     let kwargs = {
-      to: receiverVk,
+      to: receiver,
       amount: amount
     }
     let txInfo = {
@@ -160,8 +161,9 @@ function btnSendTau ()
 }
 function btnSendTauSend ()
 {
-
-  sendTAU(document.getElementById("tauamount").value, document.getElementById("tauto").value)
+  let sendamount = document.getElementById("tauamount").value;
+  let sendto = document.getElementById("tauto").value 
+  sendTAU(sendamount, sendto)
   PageSendTau = false;
   PageSendTauResult = true;
 
