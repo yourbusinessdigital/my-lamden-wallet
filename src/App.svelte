@@ -32,13 +32,14 @@ let istestnet = true;
 /****************
  * Wallet functions
 */
-  async function login(vk, sk)
-    {
-      let Net = new Lamden.Network({
+let Net = new Lamden.Network({
         name: 'Lamden Public Testnet',
         type: 'testnet',
         hosts: ['https://testnet-master-1.lamden.io:443']
         })
+  async function login(vk, sk)
+    {
+ 
       wallet.tau = await Net.API.getCurrencyBalance(vk);
       wallet.address = vk; 
       wallet.privatekey = sk;
@@ -46,14 +47,19 @@ let istestnet = true;
       Net.ping();
         
     }
+    async function refreshbalance(){
+    
+    wallet.tau = await Net.API.getCurrencyBalance(wallet.address);
+    console.log("lol")
+
+  } 
 
   function sendTAU(amount, receiver) {
-
     
     let senderVk = wallet.address;
     let kwargs = {
       to: receiver,
-      amount: amount
+      amount: {"__fixed__":  amount.toString() }
     }
     let txInfo = {
       senderVk,
@@ -161,7 +167,7 @@ function btnSendTau ()
 }
 function btnSendTauSend ()
 {
-  let sendamount = document.getElementById("tauamount").value;
+  let sendamount = Lamden.Encoder('bigNumber', document.getElementById("tauamount").value)
   let sendto = document.getElementById("tauto").value 
   sendTAU(sendamount, sendto)
   PageSendTau = false;
@@ -391,7 +397,7 @@ function sha512(str) {
               </div>
               <div class="ml-3">
                 <p class="text-base font-medium text-white">
-                  {wallet.tau} TAU
+                  {wallet.tau} TAU <a href="#" on:click={refreshbalance}>&#8635;</a>
                 </p>
                 <p class="text-sm font-medium text-indigo-200 group-hover:text-white">
                   {wallet.address}
@@ -471,7 +477,7 @@ function sha512(str) {
               </div>
               <div class="ml-3">
                 <p class="text-sm font-medium text-white">
-                  {wallet.tau} TAU
+                  {wallet.tau} TAU <a href="#" on:click={refreshbalance}>&#8635;</a>
                 </p>
                 <p class="text-xs font-medium text-indigo-200 group-hover:text-white">
                   {wallet.address}
@@ -517,7 +523,7 @@ function sha512(str) {
         
           <div class="pb-5 border-b border-gray-200 sm:flex sm:items-center sm:justify-between">
             <h3 class="text-lg leading-6 font-medium text-gray-900">
-                {wallet.tau} TAU
+                {wallet.tau} TAU <a href="#" on:click={refreshbalance}>&#8635;</a>
             </h3>
             <div class="mt-3 flex sm:mt-0 sm:ml-4">
               <button type="button" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"   on:click={btnSendTau}>
