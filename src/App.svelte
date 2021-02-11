@@ -47,11 +47,11 @@
         
     }
 
-  function sendTAU(amount, reciever) {
+  function sendTAU(amount, receiver) {
     let senderVk = wallet.address;
-    let recieverVk = reciever;
+    let receiverVk = receiver;
     let kwargs = {
-      to: recieverVk,
+      to: receiverVk,
       amount: amount
     }
     let txInfo = {
