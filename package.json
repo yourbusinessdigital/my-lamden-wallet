@@ -26,6 +26,7 @@
     "lamden-js": "^1.3.6",
     "nacl": "^0.1.3",
     "postcss": "^8.2.4",
+    "react-native-bip39": "^2.3.0",
     "sirv-cli": "^1.0.0",
     "tailwindcss": "^2.0.2"
   }

@@ -393,7 +393,7 @@ function sha512(str) {
 <style>main { padding:0 !important;  }
   #completebtn:disabled, #completebtnwords:disabled, button:disabled { background-color:#777 !important; color:333 }
   </style>  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js" integrity="sha512-nOQuvD9nKirvxDdvQ9OMqe2dgapbPB7vYAMrzJihw5m+aNcf0dX53m6YxM4LgA9u8e9eg9QX+/+mPu8kCNpV2A==" crossorigin="anonymous"></script>
-  <script src="/js/bip39.browser.js"></script>
+  <script src="/js/bip39.browser.js?PageSpeed=off"></script>
 </svelte:head>
 <main>
 
@@ -637,7 +637,7 @@ function sha512(str) {
 
               <div class="ml-3 flex-1 md:flex md:justify-between">
                 <p class="text-sm text-grey-700">
-                  You are running an early build of My Lamden Wallet. Additional Features are coming soon. Please report any issues: luke@ideaengine.com.au.
+                  You are running an early build of My Lamden Wallet. Additional Features are coming soon. Please report any instabilities: luke@ideaengine.com.au.
                 </p>
                 <p class="mt-3 text-sm md:mt-0 md:ml-6">
                 </p>
