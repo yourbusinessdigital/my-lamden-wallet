@@ -393,7 +393,7 @@ function sha512(str) {
 <style>main { padding:0 !important;  }
   #completebtn:disabled, #completebtnwords:disabled, button:disabled { background-color:#777 !important; color:333 }
   </style>  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js" integrity="sha512-nOQuvD9nKirvxDdvQ9OMqe2dgapbPB7vYAMrzJihw5m+aNcf0dX53m6YxM4LgA9u8e9eg9QX+/+mPu8kCNpV2A==" crossorigin="anonymous"></script>
-  <script src="/js/bip39.browser.js?PageSpeed=off"></script>
+  <script src="/js/bip39.browser.js?PageSpeed=off"  charset="UTF-8"></script>
 </svelte:head>
 <main>
 
